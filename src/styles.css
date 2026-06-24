@@ -75,6 +75,9 @@
   --sky: oklch(0.84 0.045 235);
   --sand: oklch(0.955 0.015 80);
   --gold: oklch(0.74 0.08 80);
+  --background: oklch(0.985 0.008 80);
+  --foreground: oklch(0.25 0.03 240);
+}
 
 :root {
   --radius: 0.625rem;
