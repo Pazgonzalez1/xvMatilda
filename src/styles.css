@@ -166,8 +166,12 @@
   50% { opacity: 1; transform: scale(1.4); }
 }
 @keyframes float-soft {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(1deg); }
+}
+@keyframes sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
 }
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(16px); }
@@ -175,9 +179,40 @@
 }
 .reveal { opacity: 0; }
 .reveal.in-view { animation: fade-up 0.9s ease-out forwards; }
-.sparkle { animation: shimmer 3s ease-in-out infinite; }
-.float-soft { animation: float-soft 6s ease-in-out infinite; }
+.sparkle { animation: shimmer 3.5s ease-in-out infinite; }
+.float-soft { animation: float-soft 7s ease-in-out infinite; }
+.sway-soft { animation: sway 9s ease-in-out infinite; transform-origin: center; }
 
 .font-script { font-family: var(--font-script); }
 .font-serif { font-family: var(--font-serif); }
 .font-sans { font-family: var(--font-sans); }
+.font-display { font-family: "Playfair Display", "Cormorant Garamond", serif; }
+
+/* Elegant "19" number: light serif with soft blue→gold gradient */
+.numero-fecha {
+  font-family: "Playfair Display", "Cormorant Garamond", serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(5rem, 22vw, 7.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  background: linear-gradient(160deg,
+    oklch(0.72 0.05 235) 0%,
+    oklch(0.55 0.04 240) 45%,
+    oklch(0.7 0.08 80) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+  filter: drop-shadow(0 4px 8px rgba(168, 196, 220, 0.25));
+}
+
+/* Fine double border, very soft */
+.frame-fine {
+  box-shadow:
+    inset 0 0 0 1px rgba(168, 196, 220, 0.35),
+    inset 0 0 0 5px rgba(255, 255, 255, 0.55),
+    inset 0 0 0 6px rgba(201, 169, 107, 0.18),
+    0 20px 50px -30px rgba(80, 110, 150, 0.35);
+}
+
