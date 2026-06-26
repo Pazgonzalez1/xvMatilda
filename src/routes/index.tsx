@@ -322,93 +322,93 @@ function Portada() {
   const { fechaTexto, nombre } = INVITATION_CONFIG;
 
   return (
-    <section className="relative mx-auto w-full max-w-md min-h-[100svh] overflow-hidden px-6">
-      {/* Arriba izquierda - Ajustado para pegarse a los bordes */}
-<FloralImage
-  src={FLORES.portadaArribaIzquierda}
-  className="absolute top-0 left-0 w-62 sm:w-60 -translate-x-5 -translate-y-0 opacity-95"
-/>
-      {/* Arriba derecha - Ajustado a la esquina */}
-<FloralImage
-  src={FLORES.portadaArribaDerecha}
-  className="absolute top-0 right-0 w-55 sm:w-72 translate-x-28 -translate-y-1 opacity-95"
-rotate={180}
-/>
+    <section className="relative mx-auto w-full max-w-md min-h-[100svh] overflow-hidden px-4 sm:px-6">
+      {/* Arriba izquierda */}
+      <FloralImage
+        src={FLORES.portadaArribaIzquierda}
+        className="absolute top-0 left-0 w-[13rem] sm:w-60 -translate-x-8 sm:-translate-x-5 -translate-y-2 sm:translate-y-0 opacity-95"
+      />
+
+      {/* Arriba derecha */}
+      <FloralImage
+        src={FLORES.portadaArribaDerecha}
+        className="absolute top-0 right-0 w-[12rem] sm:w-72 translate-x-20 sm:translate-x-28 -translate-y-2 sm:-translate-y-1 opacity-95"
+        rotate={180}
+      />
 
       {/* Pétalos abajo izquierda */}
       <FloralImage
         src={FLORES.portadaPetalos}
-        className="absolute bottom-16 left-0 w-56 sm:w-64 -translate-x-5 opacity-90"
+        className="absolute bottom-24 sm:bottom-16 left-0 w-40 sm:w-64 -translate-x-8 sm:-translate-x-5 opacity-90"
       />
-<FloralImage
-  src={FLORES.portadaArribaDerecha}
-  className="absolute bottom-0 right-0 w-56 sm:w-64 translate-x-16 translate-y-8 opacity-95"
-/>
 
-      {/* Contenido centrado de verdad en pantalla */}
+      {/* Abajo derecha */}
+      <FloralImage
+        src={FLORES.portadaArribaDerecha}
+        className="absolute bottom-0 right-0 w-44 sm:w-64 translate-x-14 sm:translate-x-16 translate-y-6 sm:translate-y-8 opacity-95"
+      />
+
       <div className="relative min-h-[100svh]">
-        <div className="absolute left-1/2 top-1/2 flex w-full max-w-[320px] -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center">
-          
+        <div className="absolute left-1/2 top-1/2 flex w-full max-w-[285px] sm:max-w-[320px] -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center">
           <div
-            className="h-px w-16 bg-[#c5a659]/30 opacity-0"
+            className="h-px w-12 sm:w-16 bg-[#c5a659]/30 opacity-0"
             style={{ animation: "fade-up 1s ease-out 0.05s forwards" }}
           />
 
-<p
-  className="mt-2 -translate-y-2 font-serif text-[5rem] leading-none tracking-[0.05em] text-[#c5a659] opacity-0"
-  style={{ animation: "fade-up 1s ease-out 0.1s forwards" }}
->
-  XV
-</p>
+          <p
+            className="mt-1 font-serif text-[3.7rem] sm:text-[5rem] leading-none tracking-[0.05em] text-[#c5a659] opacity-0"
+            style={{ animation: "fade-up 1s ease-out 0.1s forwards" }}
+          >
+            XV
+          </p>
 
           <h1
-            className="mt-3 w-full text-center font-script text-[6rem] leading-[0.9] text-[#354656] opacity-0 sm:text-[6.5rem]"
+            className="mt-2 sm:mt-3 w-full text-center font-script text-[4.8rem] sm:text-[6.5rem] leading-[0.9] text-[#354656] opacity-0"
             style={{ animation: "fade-up 1.2s ease-out 0.45s forwards" }}
           >
             {nombre}
           </h1>
 
           <div
-            className="mt-6 w-full opacity-0"
+            className="mt-5 sm:mt-6 w-full opacity-0"
             style={{ animation: "fade-up 1s ease-out 0.9s forwards" }}
           >
-  <div className="mx-auto flex w-full max-w-[290px] items-center justify-center gap-4">
-  <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[#354656]/20" />
-  <FloralImage
-    src={FLORES.florcitaDivisionPortada}
-    className="h-9 w-9"
-  />
-  <span className="h-px flex-1 bg-gradient-to-l from-transparent to-[#354656]/20" />
-</div>
+            <div className="mx-auto flex w-full max-w-[235px] sm:max-w-[290px] items-center justify-center gap-3 sm:gap-4">
+              <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[#354656]/20" />
+              <FloralImage
+                src={FLORES.florcitaDivisionPortada}
+                className="h-7 w-7 sm:h-9 sm:w-9"
+              />
+              <span className="h-px flex-1 bg-gradient-to-l from-transparent to-[#354656]/20" />
+            </div>
           </div>
 
           <div
-            className="mt-6 w-full opacity-0"
+            className="mt-5 sm:mt-6 w-full opacity-0"
             style={{ animation: "fade-up 1s ease-out 1.2s forwards" }}
           >
-<div className="fecha-portada-row mx-auto grid w-full max-w-[315px] grid-cols-[minmax(0,1fr)_82px_minmax(0,1fr)] items-center">
-  <span className="justify-self-end pr-5 font-sans text-[10px] tracking-[0.25em] text-[#354656]/70 sm:text-[11px]">
-    {fechaTexto.dia}
-  </span>
+            <div className="fecha-portada-row mx-auto grid w-full max-w-[280px] sm:max-w-[315px] grid-cols-[minmax(0,1fr)_64px_minmax(0,1fr)] sm:grid-cols-[minmax(0,1fr)_82px_minmax(0,1fr)] items-center">
+              <span className="justify-self-end pr-3 sm:pr-5 font-sans text-[9px] sm:text-[11px] tracking-[0.25em] text-[#354656]/70">
+                {fechaTexto.dia}
+              </span>
 
-  <span className="numero-19 justify-self-center self-center">
-    {fechaTexto.numero}
-  </span>
+              <span className="numero-19 justify-self-center self-center">
+                {fechaTexto.numero}
+              </span>
 
-  <span className="justify-self-start pl-5 font-sans text-[10px] tracking-[0.25em] text-[#354656]/70 sm:text-[11px]">
-    {fechaTexto.mes}
-  </span>
-</div>
+              <span className="justify-self-start pl-3 sm:pl-5 font-sans text-[9px] sm:text-[11px] tracking-[0.25em] text-[#354656]/70">
+                {fechaTexto.mes}
+              </span>
+            </div>
 
-            <p className="mt-4 font-sans text-[11px] tracking-[0.35em] text-[#354656]/60">
+            <p className="mt-2 sm:mt-4 font-sans text-[10px] sm:text-[11px] tracking-[0.35em] text-[#354656]/60">
               {fechaTexto.anio}
             </p>
 
-            <div className="mx-auto mt-4 h-px w-14 bg-[#c5a659]/40" />
+            <div className="mx-auto mt-3 sm:mt-4 h-px w-12 sm:w-14 bg-[#c5a659]/40" />
           </div>
         </div>
 
-        {/* Botón de música abajo centrado */}
         <MusicPlayer />
       </div>
     </section>
@@ -632,7 +632,7 @@ function Invitacion() {
         }
 /* AJUSTE DEL NÚMERO 19 */
 .fecha-portada-row {
-  min-height: 78px;
+  min-height: 62px;
 }
 
 .numero-19 {
@@ -640,10 +640,20 @@ function Invitacion() {
   font-family: "Playfair Display", serif;
   font-style: normal;
   font-weight: 400;
-  font-size: 4.6rem;
+  font-size: 3.6rem;
   line-height: 0.82;
   color: #354656;
   transform: translateY(-1px);
+}
+
+@media (min-width: 640px) {
+  .fecha-portada-row {
+    min-height: 78px;
+  }
+
+  .numero-19 {
+    font-size: 4.6rem;
+  }
 }
 
         .sparkle {
