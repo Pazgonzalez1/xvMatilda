@@ -466,18 +466,15 @@ function InfoEvento() {
     <Section className="px-3 py-12">
       <div className="relative overflow-hidden bg-gradient-to-b from-white via-white to-[#eef8fc] px-4 pb-16 pt-12 text-center shadow-[0_18px_55px_-32px_rgba(130,164,235,0.45)]">
         {/* Flores inferiores más chicas */}
-        <FloralImage
-          src={FLORES.ramoGrande}
-          className="pointer-events-none absolute -left-2 bottom-1 z-20 w-28 sm:w-32 opacity-95"
-          rotate={90}
-        />
+<FloralImage
+  src={FLORES.ramoGrande}
+  className="pointer-events-none absolute -left-1 bottom-1 z-20 w-24 sm:w-28 opacity-95"
+/>
 
-        <FloralImage
-          src={FLORES.portadaArribaIzquierda}
-          className="pointer-events-none absolute -right-4 bottom-10 z-20 w-40 sm:w-44 opacity-95"
-                  rotate={180}
-        />
-
+<FloralImage
+  src={FLORES.portadaArribaIzquierda}
+  className="pointer-events-none absolute -right-8 bottom-0 z-20 w-32 sm:w-36 opacity-95"
+/>
 <div className="relative mx-auto mt-10 max-w-[335px] overflow-visible">
   {/* Arreglo floral superior: más chico, más horizontal y por arriba de la tarjeta */}
   <FloralImage
