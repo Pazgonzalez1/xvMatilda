@@ -576,11 +576,11 @@ function Confirmacion() {
           <div className="mx-auto mt-7 h-px w-12 bg-[#c5a659]/45" />
 
           <p className="mt-5 font-sans text-[10px] uppercase tracking-[0.28em] text-[#354656]/45">
-            Hasta 5 de Septiembre
+            Hasta 
           </p>
 
           <p className="mt-2 font-serif text-lg text-[#354656]">
-            {confirmarHasta}
+            5 de Septiembre
           </p>
         </div>
       </div>
