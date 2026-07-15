@@ -63,7 +63,201 @@ export const Route = createFileRoute("/")({
 });
 
 // ---------- Hooks / helpers ----------
+const ConfirmationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const [hasFamily, setHasFamily] = useState(false);
+  const [companionCount, setCompanionCount] = useState(1);
+  const [companions, setCompanions] = useState([{ nombre: "", apellido: "" }]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setHasFamily(false);
+        setCompanionCount(1);
+        setCompanions([{ nombre: "", apellido: "" }]);
+      }, 300);
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  const handleCountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const count = parseInt(e.target.value);
+    setCompanionCount(count);
+    
+    setCompanions(prev => {
+      const newArr = [...prev];
+      if (count > prev.length) {
+        for (let i = prev.length; i < count; i++) {
+          newArr.push({ nombre: "", apellido: "" });
+        }
+      } else {
+        newArr.splice(count);
+      }
+      return newArr;
+    });
+  };
+
+  const handleCompanionChange = (index: number, field: "nombre" | "apellido", value: string) => {
+    const newCompanions = [...companions];
+    newCompanions[index][field] = value;
+    setCompanions(newCompanions);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    const form = e.currentTarget;
+    const actionUrl = form.action;
+
+    // 1. RECOLECTAR DATOS USANDO LOS MISMOS 'ENTRY' QUE TIENES EN TUS INPUTS
+    const mainNombre = form.querySelector<HTMLInputElement>('input[name="entry.1234365743"]')?.value || "";
+    const mainApellido = form.querySelector<HTMLInputElement>('input[name="entry.389381319"]')?.value || "";
+    const mainEmail = form.querySelector<HTMLInputElement>('input[name="entry.811209631"]')?.value || "";
+    const mainTelefono = form.querySelector<HTMLInputElement>('input[name="entry.1460209317"]')?.value || "";
+
+    try {
+      const formDataTitular = new FormData();
+      // 2. ENVIAR LOS DATOS USANDO LOS MISMOS 'ENTRY'
+      formDataTitular.append("entry.1234365743", mainNombre);
+      formDataTitular.append("entry.389381319", mainApellido);
+      formDataTitular.append("entry.811209631", mainEmail);
+      formDataTitular.append("entry.1460209317", mainTelefono);
+
+      await fetch(actionUrl, { method: 'POST', body: formDataTitular, mode: 'no-cors' });
+      
+      if (hasFamily) {
+        for (const companion of companions) {
+          if (companion.nombre.trim() !== "" || companion.apellido.trim() !== "") {
+            const formDataCompanion = new FormData();
+            // 3. ACTUALIZAR TAMBIÉN LOS ENTRY DE LOS ACOMPAÑANTES
+            formDataCompanion.append("entry.1234365743", companion.nombre);
+            formDataCompanion.append("entry.389381319", companion.apellido);
+            formDataCompanion.append("entry.811209631", `Acompañante de ${mainNombre} ${mainApellido}`);
+            formDataCompanion.append("entry.1460209317", mainTelefono); 
+            
+            await fetch(actionUrl, { method: 'POST', body: formDataCompanion, mode: 'no-cors' });
+          }
+        }
+      }
+      
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+      
+      setTimeout(() => {
+        onClose();
+      }, 3500);
+
+    } catch (error) {
+      console.error("Error al enviar el formulario", error);
+      setIsSubmitting(false);
+    }
+  };
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+      <div className="bg-white rounded-2xl p-8 max-w-sm w-full relative border-2 border-[#9bd3e6]/50 shadow-[0_0_30px_rgba(155,211,230,0.3)] max-h-[90vh] overflow-y-auto">
+        <button onClick={onClose} className="absolute top-4 right-4 text-black/40 hover:text-[#7fa9c2] transition-colors text-3xl">✕</button>
+        
+        {isSubmitted ? (
+          <div className="text-center py-6 transition-opacity duration-500">
+            <div className="w-16 h-16 bg-[#9bd3e6]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-[#7fa9c2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <h3 className="text-4xl font-serif text-[#7fa9c2] mb-2">¡Gracias!</h3>
+            <p className="text-xl text-[#354656]/70 font-sans">Gracias por confirmar tu asistencia.</p>
+          </div>
+        ) : (
+          <>
+            <h3 className="text-4xl font-serif text-[#7fa9c2] mb-2 text-center">Asistiré</h3>
+            <p className="text-xs text-center text-[#354656]/60 mb-6 uppercase tracking-[0.2em] font-sans">Por favor completa tus datos</p>
+            
+            <form 
+              action="https://docs.google.com/forms/d/e/1FAIpQLSfbiauThHezmxqGXY8vuzB7F_x4BknNtkgd6-ifbbGBGCvI6A/formResponse"
+              onSubmit={handleSubmit}
+              className="space-y-4"
+            >
+              <input name="entry.1234365743" type="text" placeholder="Tu Nombre" required className="w-full p-4 text-sm font-sans bg-[#f8fbfe] border border-[#9bd3e6]/30 rounded-xl focus:outline-none focus:border-[#7fa9c2] text-[#354656]" />
+              <input name="entry.389381319" type="text" placeholder="Tu Apellido" required className="w-full p-4 text-sm font-sans bg-[#f8fbfe] border border-[#9bd3e6]/30 rounded-xl focus:outline-none focus:border-[#7fa9c2] text-[#354656]" />
+              <input name="entry.811209631" type="email" placeholder="Tu Email" required className="w-full p-4 text-sm font-sans bg-[#f8fbfe] border border-[#9bd3e6]/30 rounded-xl focus:outline-none focus:border-[#7fa9c2] text-[#354656]" />
+              <input name="entry.1460209317" type="tel" placeholder="Tu Teléfono" required className="w-full p-4 text-sm font-sans bg-[#f8fbfe] border border-[#9bd3e6]/30 rounded-xl focus:outline-none focus:border-[#7fa9c2] text-[#354656]" />
+
+              <div className="flex items-center gap-4 py-2 border-t border-[#9bd3e6]/20 mt-6 pt-6">
+                <input 
+                  type="checkbox" 
+                  id="hasFamily"
+                  checked={hasFamily}
+                  onChange={(e) => setHasFamily(e.target.checked)}
+                  className="w-6 h-6 accent-[#7fa9c2] rounded cursor-pointer shrink-0"
+                />
+                <label htmlFor="hasFamily" className="text-[#354656] font-sans text-sm cursor-pointer select-none">
+                  Asistiré con grupo familiar
+                </label>
+              </div>
+
+              {hasFamily && (
+                <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-4 p-5 bg-[#9bd3e6]/10 border border-[#9bd3e6]/30 rounded-xl mt-4">
+                  
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] font-bold text-[#7fa9c2] uppercase tracking-[0.2em] font-sans">¿Cuántos son?</span>
+                    <select 
+                      value={companionCount} 
+                      onChange={handleCountChange}
+                      className="p-2 px-4 text-sm font-bold bg-white border border-[#9bd3e6]/50 rounded-xl focus:outline-none focus:border-[#7fa9c2] text-[#354656] shadow-sm"
+                    >
+                      {[1, 2, 3, 4, 5, 6].map(num => (
+                        <option key={num} value={num}>{num}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="space-y-4 pt-2 border-t border-[#9bd3e6]/20">
+                    {companions.map((companion, index) => (
+                      <div key={index} className="flex gap-3">
+                        <input 
+                          type="text"
+                          placeholder={`Nombre ${index + 1}`}
+                          required={hasFamily}
+                          value={companion.nombre}
+                          onChange={(e) => handleCompanionChange(index, "nombre", e.target.value)}
+                          className="w-1/2 p-3 text-sm font-sans bg-white border border-[#9bd3e6]/40 rounded-xl focus:outline-none focus:border-[#7fa9c2] focus:ring-1 focus:ring-[#9bd3e6] text-[#354656] placeholder:text-[#354656]/40 shadow-sm"
+                        />
+                        <input 
+                          type="text"
+                          placeholder={`Apellido ${index + 1}`}
+                          required={hasFamily}
+                          value={companion.apellido}
+                          onChange={(e) => handleCompanionChange(index, "apellido", e.target.value)}
+                          className="w-1/2 p-3 text-sm font-sans bg-white border border-[#9bd3e6]/40 rounded-xl focus:outline-none focus:border-[#7fa9c2] focus:ring-1 focus:ring-[#9bd3e6] text-[#354656] placeholder:text-[#354656]/40 shadow-sm"
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                </div>
+              )}
+              
+              <button 
+                type="submit"
+                disabled={isSubmitting}
+                className={`w-full py-4 mt-6 text-xs rounded-full font-sans font-semibold uppercase tracking-[0.2em] transition-all shadow-md text-white ${
+                  isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-[#9bd3e6] hover:bg-[#82c5dd] active:scale-95 hover:shadow-lg"
+                }`}
+              >
+                {isSubmitting ? "Enviando..." : "Confirmar"}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
 function useReveal<T extends HTMLElement>() {
   const ref = useRef<T>(null);
 
@@ -546,8 +740,8 @@ function InfoEvento() {
   );
 }
 
-function Confirmacion() {
-  const { whatsappUrl, confirmarHasta } = INVITATION_CONFIG;
+function Confirmacion({ onOpenModal }: { onOpenModal: () => void }) {
+  const { confirmarHasta } = INVITATION_CONFIG;
 
   return (
     <Section>
@@ -564,19 +758,18 @@ function Confirmacion() {
             Haz click para confirmar
           </p>
 
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-7 inline-flex items-center justify-center rounded-full bg-[#9bd3e6] px-10 py-3 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-white shadow-[0_12px_24px_-14px_rgba(53,70,86,0.45)] transition hover:bg-[#82c5dd] hover:shadow-md"
+          {/* Botón modificado para abrir el Modal en lugar de WhatsApp */}
+          <button
+            onClick={onOpenModal}
+            className="mt-7 inline-flex items-center justify-center rounded-full bg-[#9bd3e6] px-10 py-3 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-white shadow-[0_12px_24px_-14px_rgba(53,70,86,0.45)] transition hover:bg-[#82c5dd] hover:shadow-md cursor-pointer"
           >
             Confirmar asistencia
-          </a>
+          </button>
 
           <div className="mx-auto mt-7 h-px w-12 bg-[#c5a659]/45" />
 
           <p className="mt-5 font-sans text-[10px] uppercase tracking-[0.28em] text-[#354656]/45">
-            Hasta 
+            Confirmar hasta 
           </p>
 
           <p className="mt-2 font-serif text-lg text-[#354656]">
@@ -617,6 +810,9 @@ function Cierre() {
 }
 
 function Invitacion() {
+  // 1. ESTO FALTABA: Declarar el estado que controla si el modal está abierto o cerrado
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#fafcfd] via-white to-[#f0f4fa] text-[#354656]">
       <style>{`
@@ -627,31 +823,31 @@ function Invitacion() {
         .font-serif {
           font-family: "Cormorant Garamond", "Playfair Display", serif;
         }
-/* AJUSTE DEL NÚMERO 19 */
-.fecha-portada-row {
-  min-height: 62px;
-}
+        /* AJUSTE DEL NÚMERO 19 */
+        .fecha-portada-row {
+          min-height: 62px;
+        }
 
-.numero-19 {
-  display: block;
-  font-family: "Playfair Display", serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 3.6rem;
-  line-height: 0.82;
-  color: #354656;
-  transform: translateY(-1px);
-}
+        .numero-19 {
+          display: block;
+          font-family: "Playfair Display", serif;
+          font-style: normal;
+          font-weight: 400;
+          font-size: 3.6rem;
+          line-height: 0.82;
+          color: #354656;
+          transform: translateY(-1px);
+        }
 
-@media (min-width: 640px) {
-  .fecha-portada-row {
-    min-height: 78px;
-  }
+        @media (min-width: 640px) {
+          .fecha-portada-row {
+            min-height: 78px;
+          }
 
-  .numero-19 {
-    font-size: 4.6rem;
-  }
-}
+          .numero-19 {
+            font-size: 4.6rem;
+          }
+        }
 
         .sparkle {
           animation: twinkle 3.6s ease-in-out infinite;
@@ -755,6 +951,9 @@ function Invitacion() {
         }
       `}</style>
 
+      {/* 2. ESTO FALTABA: Agregar el componente del Modal para que exista en la página */}
+      <ConfirmationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
       <div
         className="pointer-events-none absolute -left-24 top-20 h-72 w-72 rounded-full bg-[#82a4eb]/15 blur-3xl"
         aria-hidden
@@ -773,9 +972,11 @@ function Invitacion() {
       <FraseEmotiva />
       <Countdown />
       <InfoEvento />
-      <Confirmacion />
+      
+      {/* Pasamos la función para abrir el modal */}
+      <Confirmacion onOpenModal={() => setIsModalOpen(true)} />
+      
       <Cierre />
     </main>
   );
-// eslint-disable-next-line prettier/prettier
 }
